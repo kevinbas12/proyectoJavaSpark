@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Modificar Consola</title>
+</head>
+<body>
+<div class="container p-5">
+    <select name="" id="cambiar" onchange="EditarConsola(this)" class="form-control">
+        <option value="-1" selected>consola</option>
+        {{#each consola}}
+            <option value="{{this.id}}">{{this.nombreConsola}} {{this.fabricanteConsola}} {{this.añoSalidaConsola}}   {{this.precioConsola}}</option>
+        {{/each}}
+    </select>
+    <br>
+    <p>Nombre Consola: <input type="text" id="consolaNombre" class="form-control"></p>
+    <p>Fabricante Consola: <input type="text" id="consolaFabricante"class="form-control"></p>
+    <p>año Salida Consola: <input type="number" id="consolaAñoSalida" class="form-control"></p>
+
+    <p>Precio consola: <input type="number" id="consolaPrecio"class="form-control"></p>
+
+    <p><button id="btnCambiar" class="btn btn-lg btn-outline-dark" data-id = "0" onclick="CambiarConsola(this)">Guardar</button></p>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    function EditarConsola(el) {
+        $.ajax({
+            url:"/consola",
+            method:"post",
+            dataType:"json",
+            data:{"id":el.value},
+            success:function (response) {
+                ModeloLlenarConsola(response)
+                document.querySelector("#btnCambiar").setAttribute("data-id",response.id);
+            }
+        })}
+    function ModeloLlenarConsola(response) {
+        document.querySelector("#consolaNombre").value = response.nombreConsola;
+        document.querySelector("#consolaFabricante").value = response.fabricanteConsola;
+        document.querySelector("#consolaAñoSalida").value = response.añoSalidaConsola;
+        document.querySelector("#consolaPrecio").value = response.precioConsola;
+    }
+    function AgregarDatosConsola(id) {
+        let data = {"id":id,"nombreConsola":document.querySelector("#consolaNombre").value,"fabricanteConsola":document.querySelector("#consolaFabricante").value,
+            "añoSalidaConsola":document.querySelector("#consolaAñoSalida").value,
+
+            "precioConsola":document.querySelector("#consolaPrecio").value};
+        if(data.precioConsola==0 || data.precioConsola == "" || data.precioConsola > 99999999999 || data.nombreConsola=="" ){
+            data = null;
+            return data;
+        }
+        data.precioConsola= Math.abs(Number.parseInt(data.precioConsola));
+        return data;
+    }
+    function CambiarConsola(el) {
+        let data = AgregarDatosConsola(el.getAttribute("data-id"));
+        if(data==null){
+            alert("No hay datos");
+            return;
+        }
+        $.ajax({
+            url:"/cambiarConsola",
+            method:"POST",
+            dataType:"json",
+            data:data,
+            success:function (response) {
+                alert(response);
+                window.location.href = "/consola";
+            }
+        })
+    }
+</script>
+
+</body>
+</html>

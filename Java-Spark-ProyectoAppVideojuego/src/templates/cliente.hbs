@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Clientes</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+</head>
+<body style="background-color: beige;">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto d-flex justify-content-center w-100 font-weight-bold">
+            <li class="nav-item active m-auto">
+                <a class="nav-link" href="/">Inicio</a>
+            </li>
+            <li class="nav-item d-flex m-auto">
+                <input id="consultarTodo" class="form-control" type="search" placeholder="Search" aria-label="Buscar">
+                <button class="btn btn-outline-success ml-2" onclick="BuscarCliente()">Buscar</button>
+            </li>
+            <li class="nav-item m-auto">
+
+                    <span class="btn btn-outline-light " onclick="Revisar()">Cerrar sesion</span>
+
+            </li>
+        </ul>
+    </div>
+</nav>
+<br>
+<div class="container">
+    <div class="row">
+
+            <h2 class="text-center text-italic col-md-8">Cliente</h2>
+            <p class="btn btn-outline-dark col-md-2 m-auto" onclick=AgregarVistaCliente()>Agregar nuevo</p>
+            <a class="btn btn-outline-dark col-md-2 m-auto" href="/clienteEditar">Modificar</a>
+
+    </div>
+    <!--    Consultar-->
+
+
+
+    <div class="row mt-4 font-weight-bold">
+        <div class="col-md-2 ml-auto">Nombre</div>
+        <div class="col-md-2">Direccion</div>
+        <div class="col-md-2">Fecha Nacimiento</div>
+        <div class="col-md-1">Precio</div>
+        <div class="col-md-1 mr-auto">Revision</div>
+        <div class="col-md-1">Modificar</div>
+        <div class="col-md-1">Eliminar</div>
+
+    </div>
+    <section id="display"></section>
+
+    <!--    modelo-->
+    <div class="modal fade" id="modeloDisplay" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h5 class="modal-title ml-auto" id="modeloTitulo" > Clientes</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <section id="modeloDisplay">
+                        <p class="border">nombreCliente: <span id="displayNombreCliente"></span></p>
+                        <p class="border">direccionCliente: <span id="displayDireccionCliente"></span></p>
+                        <p class="border">fechaNacimientoCliente: <span id="displayFechaNacimientoCliente"></span></p>
+
+                        <p class="border">comprasRealizadas: <span id="displayComprasRealizadas"></span></p>
+                    </section>
+
+                        <section id="modificarSiModelo">
+                             <p>nombreCliente: <input type="text" id="clienteNombre" class="form-control"></p>
+                            <p>DireccionCliente: <input type="text" id="clienteDireccion" class="form-control"></p>
+                            <p>Fecha de Nacimiento Cliente: <input type="number" id="clienteFechaNacimiento" class="form-control"></p>
+
+                            <p>Compras Realizadas por Cliente: <input type="text" id="comprasRealizadas" class="form-control"></p>
+
+
+                            <p><button id="btnGuardar" class="btn btn-lg btn-outline-dark" data-id = "0" onclick="AceptarCliente(this)">Guardar</button></p>
+                            <p><button id="btnAceptar" class="btn btn-lg btn-outline-dark" data-id = "0" onclick="CambiarCliente(this)">Aceptar</button></p>
+                        </section>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="iniciosesion" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h5 class="modal-title ml-auto" id="modeloTitulo" >Inicio sesion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label for="userName">Ingrese nombre de usuario (admin)</label><br>
+                    <input type="text" id="userName" class="form-control">
+                    <label for="userName">Ingrese contraseña (admin)</label><br>
+                    <input type="password" id="password" class="form-control"><br>
+                    <button class="btn btn-outline-dark" onclick="Acceder()">Acceder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+
+        function EliminarCliente(id) {
+            if(confirm("Quiere eliminar el cliente agregado ?")){
+                $.ajax({
+                    url:"/eliminarCliente",
+                    method:"POST",
+                    dataType:"json",
+                    data:{"id":id},
+                    success: function (response) {
+                        alert(response);
+                        ActualizarTodoCliente();
+                    }
+                });
+            }
+        }
+        function Revisar() {
+            $.ajax({
+                url:"/revisarCliente",
+                method:"POST",
+                dataType:"json",
+                success:function (response) {Cliente.Filter(clienteArrayList,"nombreCliente",request.queryParams("nombreCliente"));
+                    window.location.href = "/";
+                }
+            });
+        }
+        function AgregarVistaCliente() {
+            $('#modeloTitulo').html("Titulo");
+            $('#modeloDisplay').css({"display":"none"});
+            $('#modificarSiModelo').css({"display":"block"});
+            let response = {"id":0,"nombreCliente":" ","direccionCliente":" ","fechaNacimientoCliente":"","comprasRealizadas":""};
+            ModeloLlenarCliente(response);
+            $('#btnAceptar').css({"display":"none"});
+            $('#btnGuardar').css({"display":"block"});
+            $('#modeloDisplay').modal('show');
+        }
+        function EditarCliente(id) {
+            $.ajax({
+                url:"/cliente",
+                method:"post",
+                dataType:"json",
+                data:{"id":id},
+                success:function (response) {
+                    $('#modeloTitulo').html("Modificar Cliente");
+                    $('#modeloDisplay').css({"display":"none"});
+                    $('#modificarSiModelo').css({"display":"block"});
+                    $('#btnAceptar').css({"display":"block"});
+                    $('#btnGuardar').css({"display":"none"});
+                    ModeloLlenarCliente(response)
+                    document.querySelector("#btnAceptar").setAttribute("data-id",response.id);
+                    $('#modeloDisplay').modal('show');
+                }
+            })}
+        function ModeloLlenarCliente(response) {
+            document.querySelector("#clienteNombre").value = response.nombreCliente;
+            document.querySelector("#clienteDireccion").value = response.direccionCliente;
+            document.querySelector("#clienteFechaNacimiento").value = response.fechaNacimientoCliente;
+            document.querySelector("#comprasRealizadas").value = response.comprasRealizadas    ;
+        }
+        function CambiarCliente(el) {
+            let data = AgregarDatosCliente(el.getAttribute("data-id"));
+            if(data==null){
+                alert("Datos incorrectos");
+                return;
+            }
+            $.ajax({
+                url:"/cambiarCliente",
+                method:"POST",
+                dataType:"json",
+                data:data,
+                success:function (response) {
+                    alert(response);
+                    ActualizarTodoCliente();
+                }
+            })
+        }
+        function AceptarCliente() {
+            let data = AgregarDatosCliente(0);
+            if(data == null){
+                alert("Datos incorrectos");
+                return;
+            }
+            $.ajax({
+                url:"/aceptarCliente",
+                method:"POST",
+                dataType:"json",
+                data:data,
+                success:function (response) {
+                    alert(response);
+                    ActualizarTodoCliente();
+                }
+            })
+        }
+        function AgregarDatosCliente(id) {
+            let data = {"id":id,"nombreCliente":document.querySelector("#clienteNombre").value,"direccionCliente":document.querySelector("#clienteDireccion").value,
+                "fechaNacimientoCliente":document.querySelector("#clienteFechaNacimiento").value,
+                "comprasRealizadas":document.querySelector("#comprasRealizadas").value};
+            if(data.comprasRealizadas == "" || data.fechaNacimientoCliente == "" || data.direccionCliente == "" || data.nombreCliente == "" || data.comprasRealizadas > 999999  || data.comprasRealizadas == "" || data.comprasRealizadas == 0){
+                data = null;
+                return data;
+            }
+
+            return data;
+        }
+
+    function BuscarCliente() {
+        let detalle = document.querySelector("#consultarTodoCliente").value;
+        if(detalle==""){
+            return;
+        }
+        $.ajax({
+            url:"/buscarTodoCliente",
+            method:"POST",
+            dataType:"json",
+            data:{"detalle":detalle},
+            success:function (response) {
+                DisplayCliente(response);
+            }
+        })
+    }
+    function ConsultarCliente() {
+        let nombreCliente = document.querySelector("#clienteNombre").value;
+        let direccionCliente = document.querySelector("#clienteDireccion").value;
+        let fechaNacimientoCliente = document.querySelector("#clienteFechaNacimiento").value;
+        let minC = Math.abs(Number.parseFloat(document.querySelector("#comprasRealizadasMin").value));
+        let maxC = Math.abs(Number.parseFloat(document.querySelector("#comprasRealizadasMax").value));
+        if(minC>maxC){
+            let tmp = minC;
+            minC = maxC;
+            maxC = tmp;
+        }
+        document.querySelector("#precioMin").value = minC;
+        document.querySelector("#precioMax").value = maxC;
+        if(minC == "") minC = 0;
+        if(maxC == "") maxC = 999999;
+        console.log(nombreCliente);
+        console.log(direccionCliente);
+        console.log(fechaNacimientoCliente);
+        console.log(minC);
+        console.log(maxC);
+        $.ajax({
+            url:"/consultarCliente",
+            method:"POST",
+            dataType:"json",
+            data:{"nombreCliente":nombreCliente ,"direccionCliente":direccionCliente,"fechaNacimientoCliente":fechaNacimientoCliente,"minC":minC,"maxC":maxC},
+            success:function (response) {
+                DisplayCliente(response);
+            }
+        });
+    }
+    function RevisionCliente(id) {
+        $.ajax({
+            url:"/cliente",
+            method:"post",
+            dataType:"json",
+            data:{"id":id},
+            success:function (response) {
+                $('#modeloTitulo').html("Revision");
+                $('#modeloDisplay').css({"display":"block"});
+
+                    $('#modificarSiModelo').css({"display":"none"});
+
+                console.log(response);
+                document.querySelector("#clienteNombre").innerHTML = response.nombreCliente;
+                document.querySelector("#clienteDireccion").innerHTML = response.direccionCliente;
+                document.querySelector("#clienteFechaNacimiento").innerHTML = response.fechaNacimientoCliente;
+                document.querySelector("#comprasRealizadas").innerHTML = response.comprasRealizadas
+                $('#modeloDisplay').modal('show');
+            }
+        });
+    }
+    function DisplayCliente(response) {
+        let display = document.querySelector("#display");
+        let txt = "";
+        for(let i = 0;i<response.length;i++){
+            txt+=`<div class="row border p-2">`;
+            txt+=`<div class="col-md-2 ml-auto">${response[i].nombreCliente}</div>`
+            txt+=`<div class="col-md-2">${response[i].direccionCliente}</div>`
+            txt+=`<div class="col-md-2">${response[i].fechaNacimientoCliente}</div>`
+            txt+=`<div class="col-md-2">${response[i].comprasRealizadas}</div>`
+            txt+=`<div class="col-md-1 text-center mr-auto"><button class="btn btn-outline-dark" onclick="RevisionCliente(${response[i].id})"><i class="fas fa-info-circle"></i></button></div>`
+
+                txt+=`  <div class="col-md-1 text-center"><button class="btn btn-outline-dark" onclick="EditarCliente(${response[i].id})"><i class="fas fa-cogs"></i></button></div>
+                        <div class="col-md-1 text-center"><button class="btn btn-outline-dark" onclick="EliminarCliente(${response[i].id})"><i class="fas fa-trash-alt"></i></button></div>`
+
+            txt+=`</div>`;
+        }
+        display.innerHTML = txt;
+    }
+    function Acceder() {
+        let name = document.querySelector("#userName").value;
+        let password = document.querySelector("#password").value;
+        $.ajax({
+            url:"/acceder",
+            method:"POST",
+            dataType:"json",
+            data:{"name":name,"password":password},
+            success:function (response) {
+                window.location.href = response;
+            }
+        });
+    }
+    function SeleccionarCliente(response) {
+        let nombreCliente = document.querySelector("#clienteNombre");
+        let direccionCliente = document.querySelector("#clienteDireccion");
+        let setNombreCliente = new Set();
+        let setDireccionCliente = new Set();
+        nombreCliente.innerHTML = nombreCliente.innerHTML = `<option value="null">Seleccionar</option>`
+        for(let i = 0;i<response.length;i++){
+            setNombreCliente.add(response[i].nombreCliente);
+            setDireccionCliente.add(response[i].direccionCliente);
+        }
+        for(let val of setDireccionCliente){
+            direccionCliente.innerHTML+= `<option value = "${val}">${val}</option>`
+        }
+        for(let val of setNombreCliente){
+            nombreCliente.innerHTML+= `<option value = "${val}">${val}</option>`
+        }
+    }
+    function Seleccionar2Cliente(el) {
+        $.ajax({
+            url:"/seleccionarCliente",
+            method:"POST",
+            dataType:"json",
+            data:{"parametar":el.id,"val":el.value},
+            success:function (response) {
+                let select = el.id == "nombreCliente" ? document.querySelector("#clienteNombre"):document.querySelector("#clienteDireccion");
+                select.innerHTML = `<option value="null">Selecciona</option>`;
+                for(let i = 0;i<response.length;i++){
+                    select.innerHTML+=`<option value = "${response[i]}">${response[i]}</option>`
+                }
+            }
+        })
+    }
+    function ActualizarTodoCliente(){
+        $.ajax({
+            url:"/clientes",
+            method:"POST",
+            dataType:"json",
+            success:function (response) {
+                DisplayCliente(response);
+                SeleccionarCliente(response);
+            }
+        });
+    }
+    ActualizarTodoCliente();
+</script>
+
+ </body>
+ </html>

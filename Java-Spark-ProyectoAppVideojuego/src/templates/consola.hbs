@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Consolas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+</head>
+<body style="background-color: beige;">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto d-flex justify-content-center w-100 font-weight-bold">
+            <li class="nav-item active m-auto">
+                <a class="nav-link" href="/">Inicio</a>
+            </li>
+            <li class="nav-item d-flex m-auto">
+                <input id="consultarTodoConsola" class="form-control" type="search" placeholder="Search" aria-label="Buscar">
+                <button class="btn btn-outline-success ml-2" onclick="BuscarConsola()">Buscar</button>
+            </li>
+            <li class="nav-item m-auto">
+
+                <span class="btn btn-outline-light " onclick="RevisarConsola()">Cerrar sesion</span>
+
+            </li>
+        </ul>
+    </div>
+</nav>
+<br>
+<div class="container">
+    <div class="row">
+
+        <h2 class="text-center text-italic col-md-8">Consola</h2>
+        <p class="btn btn-outline-dark col-md-2 m-auto" onclick=AgregarVistaConsola()>Agregar nuevo</p>
+        <a class="btn btn-outline-dark col-md-2 m-auto" href="/consolaEditar">Modificar</a>
+
+    </div>
+    <!--    Consultar-->
+
+
+
+    <div class="row mt-4 font-weight-bold">
+        <div class="col-md-2 ml-auto">Consola</div>
+        <div class="col-md-2">Fabricante</div>
+        <div class="col-md-2">Año Salida</div>
+
+        <div class="col-md-1">Precio</div>
+        <div class="col-md-1 mr-auto">Revision</div>
+        <div class="col-md-1">Modificar</div>
+        <div class="col-md-1">Eliminar</div>
+
+    </div>
+    <section id="display"></section>
+
+    <!--    modelo-->
+    <div class="modal fade" id="modeloDisplay" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h5 class="modal-title ml-auto" id="modeloTitulo" > Consola</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <section id="modeloDisplay">
+                        <p class="border">Nombre Consola: <span id="displayNombreConsola"></span></p>
+                        <p class="border">Fabricante Consola: <span id="displayFabricanteConsola"></span></p>
+                        <p class="border">año Salida Consola: <span id="displayAñoSalidaConsola"></span></p>
+                        <p class="border">Precio de Consola: <span id="displayPrecioConsola"></span></p>
+                    </section>
+
+                    <section id="modificarSiModelo">
+                        <p>Nombre Consola: <input type="text" id="consolaNombre" class="form-control"></p>
+                        <p>Fabricante Consola: <input type="text" id="consolaFabricante" class="form-control"></p>
+                        <p>añoSalida Consola: <input type="text" id="consolaAñoSalida" class="form-control"></p>
+                        <p>Precio de Consola: <input type="text" id="consolaPrecio" class="form-control"></p>
+
+
+                        <p><button id="btnGuardar" class="btn btn-lg btn-outline-dark" data-id = "0" onclick="AceptarConsola(this)">Guardar</button></p>
+                        <p><button id="btnAceptar" class="btn btn-lg btn-outline-dark" data-id = "0" onclick="CambiarConsola(this)">Aceptar</button></p>
+                    </section>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="iniciosesion" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h5 class="modal-title ml-auto" id="modeloTitulo" >Inicio sesion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label for="userName">Ingrese nombre de usuario (admin)</label><br>
+                    <input type="text" id="userName" class="form-control">
+                    <label for="userName">Ingrese contraseña (admin)</label><br>
+                    <input type="password" id="password" class="form-control"><br>
+                    <button class="btn btn-outline-dark" onclick="Acceder()">Acceder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+
+    function EliminarConsola(id) {
+        if(confirm("Quiere eliminar el producto consola agregado ?")){
+            $.ajax({
+                url:"/eliminarConsola",
+                method:"POST",
+                dataType:"json",
+                data:{"id":id},
+                success: function (response) {
+                    alert(response);
+                    ActualizarTodoConsola();
+                }
+            });
+        }
+    }
+    function RevisarConsola() {
+        $.ajax({
+            url:"/revisarConsola",
+            method:"POST",
+            dataType:"json",
+            success:function (response) {Consola.Filter(consolaArrayList,"nombreConsola",request.queryParams("nombreConsola"));
+                window.location.href = "/";
+            }
+        });
+    }
+    function AgregarVistaConsola() {
+        $('#modeloTitulo').html("Titulo");
+        $('#modeloDisplay').css({"display":"none"});
+        $('#modificarSiModelo').css({"display":"block"});
+        let response = {"id":0,"nombreConsola":" ","fabricanteConsola":" ","añoSalidaConsola":"","precioConsola":""};
+        ModeloLlenarConsola(response);
+        $('#btnAceptar').css({"display":"none"});
+        $('#btnGuardar').css({"display":"block"});
+        $('#modeloDisplay').modal('show');
+    }
+    function EditarConsola(id) {
+        $.ajax({
+            url:"/consola",
+            method:"post",
+            dataType:"json",
+            data:{"id":id},
+            success:function (response) {
+                $('#modeloTitulo').html("Modificar Consola");
+                $('#modeloDisplay').css({"display":"none"});
+                $('#modificarSiModelo').css({"display":"block"});
+                $('#btnAceptar').css({"display":"block"});
+                $('#btnGuardar').css({"display":"none"});
+                ModeloLlenarConsola(response)
+                document.querySelector("#btnAceptar").setAttribute("data-id",response.id);
+                $('#modeloDisplay').modal('show');
+            }
+        })}
+    function ModeloLlenarConsola(response) {
+        document.querySelector("#consolaNombre").value = response.nombreConsola;
+        document.querySelector("#consolaFabricante").value = response.fabricanteConsola;
+        document.querySelector("#consolaAñoSalida").value = response.añoSalidaConsola;
+        document.querySelector("#consolaPrecio").value = response.precioConsola;
+    }
+    function CambiarConsola(el) {
+        let data = AgregarDatosConsola(el.getAttribute("data-id"));
+        if(data==null){
+            alert("Datos incorrectos");
+            return;
+        }
+        $.ajax({
+            url:"/cambiarConsola",
+            method:"POST",
+            dataType:"json",
+            data:data,
+            success:function (response) {
+                alert(response);
+                ActualizarTodoConsola();
+            }
+        })
+    }
+    function AceptarConsola() {
+        let data = AgregarDatosConsola(0);
+        if(data == null){
+            alert("Datos incorrectos");
+            return;
+        }
+        $.ajax({
+            url:"/aceptarConsola",
+            method:"POST",
+            dataType:"json",
+            data:data,
+            success:function (response) {
+                alert(response);
+                ActualizarTodoConsola();
+            }
+        })
+    }
+    function AgregarDatosConsola(id) {
+        let data = {"id":id,"nombreConsola":document.querySelector("#consolaNombre").value,"fabricanteConsola":document.querySelector("#consolaFabricante").value
+            ,"añoSalidaConsola":document.querySelector("#consolaAñoSalida").value,"precioConsola":document.querySelector("#consolaPrecio").value};
+        if(data.precioConsola == "" || data.nombreConsola == "" || data.añoSalidaConsola == "" || data.precioConsola > 999999999999){
+            data = null;
+            return data;
+        }
+
+        return data;
+    }
+
+    function BuscarConsola() {
+        let detalle = document.querySelector("#consultarTodoConsola").value;
+        if(detalle==""){
+            return;
+        }
+        $.ajax({
+            url:"/buscarTodoConsola",
+            method:"POST",
+            dataType:"json",
+            data:{"detalle":detalle},
+            success:function (response) {
+                DisplayConsola(response);
+            }
+        })
+    }
+    function ConsultarConsola() {
+        let nombreConsola = document.querySelector("#consolaNombre").value;
+        let fabricanteConsola = document.querySelector("#consolaFabricante").value;
+        let añoSalidaConsola = document.querySelector("#consolaAñoSalida").value;
+        let precioConsola = document.querySelector("#consolaPrecio").value;
+        let minC = Math.abs(Number.parseFloat(document.querySelector("#precioConsolaMin").value));
+        let maxC = Math.abs(Number.parseFloat(document.querySelector("#precioConsolaMax").value));
+        if(minC>maxC){
+            let tmp = minC;
+            minC = maxC;
+            maxC = tmp;
+        }
+        document.querySelector("#precioMin").value = minC;
+        document.querySelector("#precioMax").value = maxC;
+        if(minC == "") minC = 0;
+        if(maxC == "") maxC = 999999;
+        console.log(nombreConsola);
+        console.log(fabricanteConsola);
+
+        console.log(minC);
+        console.log(maxC);
+        $.ajax({
+            url:"/consultarConsola",
+            method:"POST",
+            dataType:"json",
+            data:{"nombreConsola":nombreConsola ,"fabricanteConsola":fabricanteConsola,"minC":minC,"maxC":maxC},
+            success:function (response) {
+                DisplayConsola(response);
+            }
+        });
+    }
+    function RevisionConsola(id) {
+        $.ajax({
+            url:"/consola",
+            method:"post",
+            dataType:"json",
+            data:{"id":id},
+            success:function (response) {
+                $('#modeloTitulo').html("Revision");
+                $('#modeloDisplay').css({"display":"block"});
+
+                $('#modificarSiModelo').css({"display":"none"});
+
+                console.log(response);
+                document.querySelector("#consolaNombre").innerHTML = response.nombreConsola;
+                document.querySelector("#consolaFabricante").innerHTML = response.fabricanteConsola;
+                document.querySelector("#consolaAñoSalida").innerHTML = response.añoSalidaConsola;
+                document.querySelector("#consolaPrecio").innerHTML = response.precioConsola
+                ModeloLlenarConsola(response)
+                $('#modeloDisplay').modal('show');
+
+            }
+        });
+    }
+    function DisplayConsola(response) {
+        let display = document.querySelector("#display");
+        let txt = "";
+        for(let i = 0;i<response.length;i++){
+            txt+=`<div class="row border p-2">`;
+            txt+=`<div class="col-md-2 ml-auto">${response[i].nombreConsola}</div>`
+            txt+=`<div class="col-md-2">${response[i].fabricanteConsola}</div>`
+            txt+=`<div class="col-md-2">${response[i].añoSalidaConsola}</div>`
+            txt+=`<div class="col-md-2">${response[i].precioConsola}</div>`
+            txt+=`<div class="col-md-1 text-center mr-auto"><button class="btn btn-outline-dark" onclick="RevisionConsola(${response[i].id})"><i class="fas fa-info-circle"></i></button></div>`
+
+            txt+=`  <div class="col-md-1 text-center"><button class="btn btn-outline-dark" onclick="EditarConsola(${response[i].id})"><i class="fas fa-cogs"></i></button></div>
+                        <div class="col-md-1 text-center"><button class="btn btn-outline-dark" onclick="EliminarConsola(${response[i].id})"><i class="fas fa-trash-alt"></i></button></div>`
+
+            txt+=`</div>`;
+        }
+        display.innerHTML = txt;
+    }
+    function Acceder() {
+        let name = document.querySelector("#userName").value;
+        let password = document.querySelector("#password").value;
+        $.ajax({
+            url:"/acceder",
+            method:"POST",
+            dataType:"json",
+            data:{"name":name,"password":password},
+            success:function (response) {
+                window.location.href = response;
+            }
+        });
+    }
+    function SeleccionarConsola(response) {
+        let nombreConsola = document.querySelector("#consolaNombre");
+        let fabricanteConsola = document.querySelector("#consolaFabricante");
+        let setNombreConsola = new Set();
+
+        let setFabricanteConsola = new Set();
+        nombreConsola.innerHTML = nombreConsola.innerHTML = `<option value="null">Seleccionar</option>`
+        for(let i = 0;i<response.length;i++){
+            setNombreConsola.add(response[i].nombreConsola);
+            setFabricanteConsola.add(response[i].fabricanteConsola);
+        }
+        for(let val of setFabricanteConsola){
+            fabricanteConsola.innerHTML+= `<option value = "${val}">${val}</option>`
+        }
+        for(let val of setNombreConsola){
+            nombreConsola.innerHTML+= `<option value = "${val}">${val}</option>`
+        }
+    }
+    function Seleccionar2Consola(el) {
+        $.ajax({
+            url:"/seleccionarConsola",
+            method:"POST",
+            dataType:"json",
+            data:{"parametar":el.id,"val":el.value},
+            success:function (response) {
+                let select = el.id == "nombreConsola" ? document.querySelector("#consolaNombre"):document.querySelector("#consolaFabricante");
+                select.innerHTML = `<option value="null">Selecciona</option>`;
+                for(let i = 0;i<response.length;i++){
+                    select.innerHTML+=`<option value = "${response[i]}">${response[i]}</option>`
+                }
+            }
+        })
+    }
+    function ActualizarTodoConsola(){
+        $.ajax({
+            url:"/consolas",
+            method:"POST",
+            dataType:"json",
+            success:function (response) {
+                DisplayConsola(response);
+                SeleccionarConsola(response);
+            }
+        });
+    }
+    ActualizarTodoConsola();
+</script>
+
+</body>
+</html>

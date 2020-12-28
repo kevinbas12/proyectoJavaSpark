@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Modificar Cliente</title>
+</head>
+<body>
+<div class="container p-5">
+    <select name="" id="cambiar" onchange="EditarCliente(this)" class="form-control">
+        <option value="-1" selected>cliente</option>
+        {{#each cliente}}
+            <option value="{{this.id}}">{{this.nombreCliente}} {{this.direccionCliente}} {{this.fechaNacimientoCliente}}   {{this.comprasRealizadas}}</option>
+        {{/each}}
+    </select>
+    <br>
+    <p>Nombre Cliente: <input type="text" id="clienteNombre" class="form-control"></p>
+    <p>Direccion Cliente: <input type="text" id="clienteDireccion"class="form-control"></p>
+    <p>fecha Nacimiento Cliente: <input type="number" id="clienteFechaNacimiento" class="form-control"></p>
+
+    <p>Compras Realizadas: <input type="number" id="comprasRealizadas"class="form-control"></p>
+
+    <p><button id="btnCambiar" class="btn btn-lg btn-outline-dark" data-id = "0" onclick="CambiarCliente(this)">Guardar</button></p>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    function EditarCliente(el) {
+        $.ajax({
+            url:"/cliente",
+            method:"post",
+            dataType:"json",
+            data:{"id":el.value},
+            success:function (response) {
+                ModeloLlenarCliente(response)
+                document.querySelector("#btnCambiar").setAttribute("data-id",response.id);
+            }
+        })}
+    function ModeloLlenarCliente(response) {
+        document.querySelector("#clienteNombre").value = response.nombreCliente;
+        document.querySelector("#clienteDireccion").value = response.direccionCliente;
+        document.querySelector("#clienteFechaNacimiento").value = response.fechaNacimientoCliente;
+        document.querySelector("#comprasRealizadas").value = response.comprasRealizadas;
+    }
+    function AgregarDatosCliente(id) {
+        let data = {"id":id,"nombreCliente":document.querySelector("#clienteNombre").value,"direccionCliente":document.querySelector("#clienteDireccion").value,
+            "fechaNacimientoCliente":document.querySelector("#clienteFechaNacimiento").value,
+
+            "comprasRealizadas":document.querySelector("#comprasRealizadas").value};
+        if(data.comprasRealizadas==0 || data.comprasRealizadas == "" || data.comprasRealizadas > 999999 || data.nombreCliente==""||data.direccionCliente ==""|| data.fechaNacimientoCliente==""||data.cuentaBanco>99999999 ||  data.cuentaBanco == 0|| data.productoMasComprado == "" ||data.rangoSalario == "" || data.vehiculoSN == "" ){
+            data = null;
+            return data;
+        }
+        data.comprasRealizadas = Math.abs(Number.parseInt(data.comprasRealizadas));
+        return data;
+    }
+    function CambiarCliente(el) {
+        let data = AgregarDatosCliente(el.getAttribute("data-id"));
+        if(data==null){
+            alert("No hay datos");
+            return;
+        }
+        $.ajax({
+            url:"/cambiarCliente",
+            method:"POST",
+            dataType:"json",
+            data:data,
+            success:function (response) {
+                alert(response);
+                window.location.href = "/cliente";
+            }
+        })
+    }
+</script>
+
+</body>
+</html>

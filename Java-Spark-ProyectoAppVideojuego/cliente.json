@@ -1,0 +1,4 @@
+[{"id":1,"nombreCliente":"Juan Perez","direccionCliente":"Juan Garay 123","fechaNacimientoCliente":12122000,"comprasRealizadas":5},
+  {"id":2,"nombreCliente":"Pepito Perez","direccionCliente":"España 123","fechaNacimientoCliente":12122001,"comprasRealizadas":1},
+  {"id":3,"nombreCliente":" Juan Pepe","direccionCliente":" Brasil","fechaNacimientoCliente":12122000,"comprasRealizadas":2},
+  {"id":4,"nombreCliente":" Nico Chavez","direccionCliente":" Sajonia","fechaNacimientoCliente":121200,"comprasRealizadas":9}]

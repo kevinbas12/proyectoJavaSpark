@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Modificar Videojuego</title>
+</head>
+<body>
+<div class="container p-5">
+    <select name="" id="cambiar" onchange="Editar(this)" class="form-control">
+        <option value="-1" selected>videojuegos</option>
+        {{#each videojuego}}
+            <option value="{{this.id}}">{{this.nombre}} {{this.desarrolladora}} {{this.añoSalida}} {{this.genero}} {{this.consola}} {{this.precio}}</option>
+        {{/each}}
+    </select>
+    <br>
+    <p>Nombre: <input type="text" id="videojuegoNombre" class="form-control"></p>
+    <p>Desarrolladora: <input type="text" id="videojuegoDesarrolladora"class="form-control"></p>
+    <p>añoSalida: <input type="text" id="videojuegoañoSalida" class="form-control"></p>
+    <p>Genero: <input type="text" id="videojuegoGenero" class="form-control"></p>
+    <p>Consola: <input type="text" id="videojuegoConsola" class="form-control"></p>
+    <p>Precio: <input type="number" id="videojuegoPrecio"class="form-control"></p>
+
+    <p><button id="btnCambiar" class="btn btn-lg btn-outline-dark" data-id = "0" onclick="Cambiar(this)">Guardar</button></p>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    function Editar(el) {
+        $.ajax({
+            url:"/videojuego",
+            method:"post",
+            dataType:"json",
+            data:{"id":el.value},
+            success:function (response) {
+                ModeloLlenar(response)
+                document.querySelector("#btnCambiar").setAttribute("data-id",response.id);
+            }
+        })}
+    function ModeloLlenar(response) {
+        document.querySelector("#videojuegoNombre").value = response.nombre;
+        document.querySelector("#videojuegoDesarrolladora").value = response.desarrolladora;
+        document.querySelector("#videojuegoañoSalida").value = response.añoSalida;
+        document.querySelector("#videojuegoGenero").value = response.genero;
+        document.querySelector("#videojuegoConsola").value = response.consola;
+        document.querySelector("#videojuegoPrecio").value = response.precio;
+    }
+    function AgregarDatos(id) {
+        let data = {"id":id,"nombre":document.querySelector("#videojuegoNombre").value,"desarrolladora":document.querySelector("#videojuegoDesarrolladora").value,
+            "añoSalida":document.querySelector("#videojuegoañoSalida").value,"genero":document.querySelector("#videojuegoGenero").value,
+            "consola":document.querySelector("#videojuegoConsola").value,"precio":document.querySelector("#videojuegoPrecio").value};
+        if(data.precio==0 || data.precio == "" || data.precio > 999999 || data.nombre==""||data.desarrolladora ==""|| data.añoSalida=="" || data.genero=="" || data.consola==""){
+            data = null;
+            return data;
+        }
+        data.precio = Math.abs(Number.parseFloat(data.precio));
+        return data;
+    }
+    function Cambiar(el) {
+        let data = AgregarDatos(el.getAttribute("data-id"));
+        if(data==null){
+            alert("No hay datos");
+            return;
+        }
+        $.ajax({
+            url:"/cambiar",
+            method:"POST",
+            dataType:"json",
+            data:data,
+            success:function (response) {
+                alert(response);
+                window.location.href = "/";
+            }
+        })
+    }
+    
+</script>
+
+</body>
+</html>

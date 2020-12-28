@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Proyecto Java</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+</head>
+<body style="background-color: beige;">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto d-flex justify-content-center w-100 font-weight-bold">
+            <li class="nav-item active m-auto">
+                <a class="nav-link" href="/">Inicio</a>
+            </li>
+            <li class="nav-item d-flex m-auto">
+                <input id="consultarTodo" class="form-control" type="search" placeholder="Search" aria-label="Buscar">
+                <button class="btn btn-outline-success ml-2" onclick="Buscar()">buscar</button>
+            </li>
+            <li class="nav-item m-auto">
+                {{#if admin}}
+                    <span class="btn btn-outline-light " onclick="Revisar()">Cerrar sesion</span>
+                {{else}}
+                    <span class="btn btn-outline-light " onclick="$('#iniciosesion').modal('show')">Inicio Sesion</span>
+                {{/if}}
+            </li>
+        </ul>
+    </div>
+</nav>
+<br>
+<div class="container">
+    <div class="row">
+        {{#if admin}}
+            <h2 class="text-center text-italic col-md-8">Videojuegos</h2>
+            <p class="btn btn-outline-dark col-md-2 m-auto" onclick=AgregarVista()>Agregar nuevo</p>
+            <a class="btn btn-outline-dark col-md-2 m-auto" href="/videojuegoEditar">Modificar</a>
+            <a class="btn btn-outline-dark col-md-2 m-auto" href="/cliente">Clientes</a>
+            <a class="btn btn-outline-dark col-md-2 m-auto" href="/especial">Especiales</a>
+            <a class="btn btn-outline-dark col-md-2 m-auto" href="/consola">Consolas</a>
+        {{else}}
+            <h2 class="text-center text-italic w-100">Videojuegos</h2>
+        {{/if}}
+    </div>
+    <!--    Consultar-->
+    
+
+    <div class="row mt-4 font-weight-bold">
+        <div class="col-md-2 ml-auto">Nombre</div>
+        <div class="col-md-2">Desarrolladora</div>
+        <div class="col-md-2">añoSalida</div>
+        <div class="col-md-2">Genero</div>
+        <div class="col-md-2">Consola</div>
+        <div class="col-md-1">Precio</div>
+        <div class="col-md-1 mr-auto">Revision</div>
+        {{#if admin}}
+            <div class="col-md-1">Modificar</div>
+            <div class="col-md-1">Eliminar</div>
+        {{/if}}
+    </div>
+    <section id="display"></section>
+
+    <!--    modelo-->
+    <div class="modal fade" id="modeloDisplay" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h5 class="modal-title ml-auto" id="modeloTitulo" > Display Videojuegos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <section id="modeloDisplay">
+                        <p class="border">nombre: <span id="displayNombre"></span></p>
+                        <p class="border">desarrolladora: <span id="displayDesarrolladora"></span></p>
+                        <p class="border">añoSalida: <span id="displayañoSalida"></span></p>
+                        <p class="border">genero: <span id="displayGenero"></span></p>
+                        <p class="border">genero: <span id="displayConsola"></span></p>
+
+                        <p class="border">precio: <span id="displayPrecio"></span></p>
+                    </section>
+                    {{#if admin}}
+                        <section id="modificarSiModelo">
+                            <p>Nombre: <input type="text" id="videojuegoNombre" class="form-control"></p>
+                            <p>desarrolladora: <input type="text" id="videojuegoDesarrolladora" class="form-control"></p>
+                            <p>añoSalida: <input type="number" id="videojuegoañoSalida" class="form-control"></p>
+                            <p>genero: <input type="text" id="videojuegoGenero" class="form-control"></p>
+                            <p>consola: <input type="text" id="videojuegoConsola" class="form-control"></p>
+                            <p>precio: <input type="number" id="videojuegoPrecio" class="form-control"></p>
+
+                            <p><button id="btnGuardar" class="btn btn-lg btn-outline-dark" data-id = "0" onclick="Aceptar(this)">Guardar</button></p>
+                            <p><button id="btnAceptar" class="btn btn-lg btn-outline-dark" data-id = "0" onclick="Cambiar(this)">Aceptar</button></p>
+                        </section>
+                    {{/if}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="iniciosesion" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h5 class="modal-title ml-auto" id="modeloTitulo" >Inicio sesion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label for="userName">Ingrese nombre de usuario (admin)</label><br>
+                    <input type="text" id="userName" class="form-control">
+                    <label for="userName">Ingrese contraseña (admin)</label><br>
+                    <input type="password" id="password" class="form-control"><br>
+                    <button class="btn btn-outline-dark" onclick="Acceder()">Acceder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+        {{#if admin}}
+        function Eliminar(id) {
+            if(confirm("Quiere eliminar el producto ?")){
+                $.ajax({
+                    url:"/eliminar",
+                    method:"POST",
+                    dataType:"json",
+                    data:{"id":id},
+                    success: function (response) {
+                        alert(response);
+                        ActualizarTodo();
+                    }
+                });
+            }
+        }
+        function Revisar() {
+            $.ajax({
+                url:"/revisar",
+                method:"POST",
+                dataType:"json",
+                success:function (response) {Videojuego.Filter(videojuegoArrayList,"nombre",request.queryParams("Nombre"));
+                    window.location.href = "/";
+                }
+            });
+        }
+        function AgregarVista() {
+            $('#modeloTitulo').html("Titulo");
+            $('#modeloDisplay').css({"display":"none"});
+            $('#modificarSiModelo').css({"display":"block"});
+            let response = {"id":0,"nombre":" ","desarrolladora":" ","añoSalida":" ","genero":" ","consola":" ","precio":" "};
+            ModeloLlenar(response);
+            $('#btnAceptar').css({"display":"none"});
+            $('#btnGuardar').css({"display":"block"});
+            $('#modeloDisplay').modal('show');
+        }
+        function Editar(id) {
+            $.ajax({
+                url:"/videojuego",
+                method:"post",
+                dataType:"json",
+                data:{"id":id},
+                success:function (response) {
+                    $('#modeloTitulo').html("Modificar Producto");
+                    $('#modeloDisplay').css({"display":"none"});
+                    $('#modificarSiModelo').css({"display":"block"});
+                    $('#btnAceptar').css({"display":"block"});
+                    $('#btnGuardar').css({"display":"none"});
+                    ModeloLlenar(response)
+                    document.querySelector("#btnAceptar").setAttribute("data-id",response.id);
+                    $('#modeloDisplay').modal('show');
+                }
+            })}
+        function ModeloLlenar(response) {
+            document.querySelector("#videojuegoNombre").value = response.nombre;
+            document.querySelector("#videojuegoDesarrolladora").value = response.desarrolladora;
+            document.querySelector("#videojuegoañoSalida").value = response.añoSalida;
+            document.querySelector("#videojuegoGenero").value = response.genero;
+            document.querySelector("#videojuegoConsola").value = response.consola;
+            document.querySelector("#videojuegoPrecio").value = response.precio    ;
+        }
+        function Cambiar(el) {
+            let data = AgregarDatos(el.getAttribute("data-id"));
+            if(data==null){
+                alert("Datos incorrectos");
+                return;
+            }
+            $.ajax({
+                url:"/cambiar",
+                method:"POST",
+                dataType:"json",
+                data:data,
+                success:function (response) {
+                    alert(response);
+                    ActualizarTodo();
+                }
+            })
+        }
+        function Aceptar() {
+            let data = AgregarDatos(0);
+            if(data==null){
+                alert("Datos incorrectos");
+                return;
+            }
+            $.ajax({
+                url:"/aceptar",
+                method:"POST",
+                dataType:"json",
+                data:data,
+                success:function (response) {
+                    alert(response);
+                    ActualizarTodo();
+                }
+            })
+        }
+        function AgregarDatos(id) {
+            let data = {"id":id,"nombre":document.querySelector("#videojuegoNombre").value,"desarrolladora":document.querySelector("#videojuegoDesarrolladora").value,
+                "añoSalida":document.querySelector("#videojuegoañoSalida").value,"genero":document.querySelector("#videojuegoGenero").value
+                ,"consola":document.querySelector("#videojuegoConsola").value,"precio":document.querySelector("#videojuegoPrecio").value};
+            if(data.precio==0 || data.precio == "" || data.precio > 999999 || data.nombre==""||data.desarrolladora ==""|| data.añoSalida=="" || data.genero==""){
+                data = null;
+                return data;
+            }
+            data.precio = Math.abs(Number.parseFloat(data.precio));
+            return data;
+        }
+        {{/if}}
+    function Buscar() {
+        let detalle = document.querySelector("#consultarTodo").value;
+        if(detalle==""){
+            return;
+        }
+        $.ajax({
+            url:"/buscarTodo",
+            method:"POST",
+            dataType:"json",
+            data:{"detalle":detalle},
+            success:function (response) {
+                Display(response);
+            }
+        })
+    }
+    function Consultar() {
+        let nombre = document.querySelector("#videojuegoNombre").value;
+        let desarrolladora = document.querySelector("#videojuegoDesarrolladora").value;
+        let añoSalida = document.querySelector("#videojuegoañoSalida").value;
+        let genero = document.querySelector("#videojuegoGenero").value;
+        let consola = document.querySelector("#videojuegoConsola").value;
+        let min = Math.abs(Number.parseFloat(document.querySelector("#precioMin").value));
+        let max = Math.abs(Number.parseFloat(document.querySelector("#precioMax").value));
+        if(min>max){
+            let tmp = min;
+            min = max;
+            max = tmp;
+        }
+        document.querySelector("#precioMin").value = min;
+        document.querySelector("#precioMax").value = max;
+        if(min == "") min = 0;
+        if(max == "") max = 999999;
+        console.log(nombre);
+        console.log(desarrolladora);
+        console.log(añoSalida);
+        console.log(genero);
+        console.log(consola);
+        console.log(min);
+        console.log(max);
+        $.ajax({
+            url:"/consultar",
+            method:"POST",
+            dataType:"json",
+            data:{"nombre":nombre ,"desarrolladora":desarrolladora,"añoSalida":añoSalida,"genero":genero,"consola": consola,"min":min,"max":max},
+            success:function (response) {
+                Display(response);
+            }
+        });
+    }
+    function Revision(id) {
+        $.ajax({
+            url:"/videojuego",
+            method:"post",
+            dataType:"json",
+            data:{"id":id},
+            success:function (response) {
+                $('#modeloTitulo').html("Revision Productos");
+                $('#modeloDisplay').css({"display":"block"});
+                {{#if admin}}
+                    $('#modificarSiModelo').css({"display":"none"});
+                {{/if}}
+                console.log(response);
+                document.querySelector("#videojuegoNombre").innerHTML = response.nombre;
+                document.querySelector("#videojuegoDesarrolladora").innerHTML = response.desarrolladora;
+                document.querySelector("#videojuegoañoSalida").innerHTML = response.añoSalida;
+                document.querySelector("#videojuegoGenero").innerHTML = response.genero;
+                document.querySelector("#videojuegoConsola").innerHTML = response.consola;
+                document.querySelector("#videojuegoPrecio").innerHTML = response.precio;
+                $('#modeloDisplay').modal('show');
+            }
+        });
+    }
+    function Display(response) {
+        let display = document.querySelector("#display");
+        let txt = "";
+        for(let i = 0;i<response.length;i++){
+            txt+=`<div class="row border p-2">`;
+            txt+=`<div class="col-md-2 ml-auto">${response[i].nombre}</div>`
+            txt+=`<div class="col-md-2">${response[i].desarrolladora}</div>`
+            txt+=`<div class="col-md-2">${response[i].añoSalida}</div>`
+            txt+=`<div class="col-md-2">${response[i].genero}</div>`
+            txt+=`<div class="col-md-2">${response[i].consola}</div>`
+            txt+=`<div class="col-md-1">${response[i].precio}</div>`
+            txt+=`<div class="col-md-1 text-center mr-auto"><button class="btn btn-outline-dark" onclick="Revision(${response[i].id})"><i class="fas fa-info-circle"></i></button></div>`
+            {{#if admin}}
+                txt+=`  <div class="col-md-1 text-center"><button class="btn btn-outline-dark" onclick="Editar(${response[i].id})"><i class="fas fa-cogs"></i></button></div>
+                        <div class="col-md-1 text-center"><button class="btn btn-outline-dark" onclick="Eliminar(${response[i].id})"><i class="fas fa-trash-alt"></i></button></div>`
+            {{/if}}
+            txt+=`</div>`;
+        }
+        display.innerHTML = txt;
+    }
+    function Acceder() {
+        let name = document.querySelector("#userName").value;
+        let password = document.querySelector("#password").value;
+        $.ajax({
+            url:"/acceder",
+            method:"POST",
+            dataType:"json",
+            data:{"name":name,"password":password},
+            success:function (response) {
+                window.location.href = response;
+            }
+        });
+    }
+    function Seleccionar(response) {
+        let nombre = document.querySelector("#nombre");
+        let desarrolladora = document.querySelector("#desarrolladora");
+        let setNombre = new Set();
+        let setDesarrolladora = new Set();
+        nombre.innerHTML = nombre.innerHTML = `<option value="null">Seleccionar</option>`
+        for(let i = 0;i<response.length;i++){
+            setNombre.add(response[i].nombre);
+            setDesarrolladora.add(response[i].desarrolladora);
+        }
+        for(let val of setDesarrolladora){
+            desarrolladora.innerHTML+= `<option value = "${val}">${val}</option>`
+        }
+        for(let val of setNombre){
+            nombre.innerHTML+= `<option value = "${val}">${val}</option>`
+        }
+    }
+    function Seleccionar2(el) {
+        $.ajax({
+            url:"/seleccionar",
+            method:"POST",
+            dataType:"json",
+            data:{"parametar":el.id,"val":el.value},
+            success:function (response) {
+                let select = el.id == "desarrolladora" ? document.querySelector("#añoSalida"):document.querySelector("#genero");
+                select.innerHTML = `<option value="null">Selecciona</option>`;
+                for(let i = 0;i<response.length;i++){
+                    select.innerHTML+=`<option value = "${response[i]}">${response[i]}</option>`
+                }
+            }
+        })
+    }
+    function ActualizarTodo(){
+        $.ajax({
+            url:"/videojuegos",
+            method:"POST",
+            dataType:"json",
+            success:function (response) {
+                Display(response);
+                Seleccionar(response);
+            }
+        });
+    }
+    ActualizarTodo();
+</script>
+</body>
+</html>

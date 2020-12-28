@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Modificar Especial</title>
+</head>
+<body>
+<div class="container p-5">
+    <select name="" id="cambiar" onchange="EditarEspecial(this)" class="form-control">
+        <option value="-1" selected>especial</option>
+        {{#each especial}}
+            <option value="{{this.id}}">{{this.nombreEspecial}} {{this.juegoEspecial}} {{this.precioEspecial}}</option>
+        {{/each}}
+    </select>
+    <br>
+    <p>Nombre Producto Especial: <input type="text" id="especialNombre" class="form-control"></p>
+    <p>Juego de Producto Especial: <input type="text" id="especialJuego"class="form-control"></p>
+   
+
+    <p>Precio Producto: <input type="number" id="especialPrecio"class="form-control"></p>
+
+    <p><button id="btnCambiar" class="btn btn-lg btn-outline-dark" data-id = "0" onclick="CambiarEspecial(this)">Guardar</button></p>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    function EditarEspecial(el) {
+        $.ajax({
+            url:"/especial",
+            method:"post",
+            dataType:"json",
+            data:{"id":el.value},
+            success:function (response) {
+                ModeloLlenarEspecial(response)
+                document.querySelector("#btnCambiar").setAttribute("data-id",response.id);
+            }
+        })}
+    function ModeloLlenarEspecial(response) {
+        document.querySelector("#especialNombre").value = response.nombreEspecial;
+        document.querySelector("#especialJuego").value = response.juegoEspecial;
+        document.querySelector("#especialPrecio").value = response.precioEspecial;
+    }
+    function AgregarDatosEspecial(id) {
+        let data = {"id":id,"nombreEspecial":document.querySelector("#especialNombre").value,"juegoEspecial":document.querySelector("#especialJuego").value,
+
+            "precioEspecial":document.querySelector("#especialPrecio").value};
+        if(data.precioEspecial==0 || data.precioEspecial == "" || data.precioEspecial > 999999 || data.nombreEspecial==""||data.juegoEspecial =="" ){
+            data = null;
+            return data;
+        }
+        data.precioEspecial = Math.abs(Number.parseInt(data.precioEspecial));
+        return data;
+    }
+    function CambiarEspecial(el) {
+        let data = AgregarDatosEspecial(el.getAttribute("data-id"));
+        if(data==null){
+            alert("No hay datos");
+            return;
+        }
+        $.ajax({
+            url:"/cambiarEspecial",
+            method:"POST",
+            dataType:"json",
+            data:data,
+            success:function (response) {
+                alert(response);
+                window.location.href = "/especial";
+            }
+        })
+    }
+</script>
+
+</body>
+</html>
